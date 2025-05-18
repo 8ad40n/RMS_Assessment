@@ -1,6 +1,8 @@
 import Dishes from '@/components/Dishes/Dishes'
 import Feedback from '@/components/Feedback/feedback'
 import Banner from '@/components/Header/Banner'
+import Members from '@/components/Members/members'
+import PartnersAndClients from '@/components/PartnersAndClients/PartnersAndClients'
 
 export default function page() {
   return (
@@ -8,6 +10,8 @@ export default function page() {
       <Banner />
       <Dishes />
       <Feedback />
+      <Members />
+      <PartnersAndClients />
     </div>
   )
 }

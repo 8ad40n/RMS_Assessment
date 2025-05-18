@@ -1,39 +1,25 @@
 "use client";
 
-import { Clock, Facebook, Instagram, Mail, MapPin, Phone, Twitter, Youtube } from "lucide-react";
+import { Clock, Facebook, Instagram, Mail, MapPin, Phone, Send, Twitter, Youtube } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#880808] text-white pt-16">
+    <footer className="bg-[#880808] text-white pt-10">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 justify-between items-center">
           {/* Newsletter Section */}
           <div className="space-y-4">
             <h2 className="text-2xl font-bold">RESTAURANT</h2>
             <p className="text-sm">Subscribe our newsletter and get discount 25%off</p>
-            <div className="flex gap-2">
+            <div className="relative flex gap-2">
               <input
                 type="email"
                 placeholder="Enter Your Email"
                 className="px-4 py-2 rounded bg-white text-black flex-1"
               />
-              <button className="bg-white p-2 rounded">
-                <svg
-                  className="w-6 h-6 text-[#880808]"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </button>
+              <Send className="absolute right-0 top-0 h-full w-10 px-2 cursor-pointer hover:text-gray-300 bg-[#A52A2A]"/>
             </div>
             <div className="flex gap-4 mt-4">
               <Facebook className="w-5 h-5 cursor-pointer hover:text-gray-300" />
@@ -79,7 +65,7 @@ export default function Footer() {
           </div>
 
           {/* Instagram Gallery */}
-          <div className="space-y-4">
+          <div className="hidden md:block space-y-4">
             <h3 className="text-xl font-semibold">Instagram Gallery</h3>
             <div className="grid grid-cols-3 gap-2">
               {[
