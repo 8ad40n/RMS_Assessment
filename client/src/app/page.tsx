@@ -19,27 +19,34 @@ export default function Home() {
     {
       id: 1,
       image: "/assets/image1_banner.png",
+      background: "#880808",
+      sub_background: "#A52A2A",
     },
     {
       id: 2,
       image: "/assets/image2_banner.png",
+      background: "#0a4669",
+      sub_background: "#0a3659",
     },
     {
       id: 3,
       image: "/assets/image3_banner.png",
+      background: "#953553",
+      sub_background: "#a95c68",
     },
     {
       id: 4,
       image: "/assets/image4_banner.png",
+      background: "#006666",
+      sub_background: "#003333",
     },
   ];
   return (
-    <div className="bg-[#880808] h-screen w-screen overflow-hidden relative">
-      <div className="rounded-full bg-[#A52A2A] w-[50vw] h-[50vw] top-0 left-0 -translate-x-[30%] -translate-y-[30%]"></div>
-      <div className="rounded-full bg-[#A52A2A] w-[40vw] h-[40vw] right-0 translate-x-[180%] -translate-y-[40%]"></div>
+    <div className={`h-screen w-screen overflow-hidden relative transition-colors duration-500`} style={{ backgroundColor: imageData[currentImage - 1].background }}>
+      <div className="rounded-full w-[50vw] h-[50vw] top-0 left-0 -translate-x-[30%] -translate-y-[30%] transition-colors duration-500" style={{ backgroundColor: imageData[currentImage - 1].sub_background }}></div>
+      <div className="rounded-full w-[40vw] h-[40vw] right-0 translate-x-[180%] -translate-y-[40%] transition-colors duration-500" style={{ backgroundColor: imageData[currentImage - 1].sub_background }}></div>
       {/* navbar */}
-      <div className="absolute t
-      op-0 left-0 w-full flex justify-between items-center p-10">
+      <div className="absolute top-0 left-0 w-full flex justify-between items-center p-10">
         <div className="text-white text-3xl font-bold">RESTAURANT</div>
         <div className="bg-white rounded-2xl w-1/3 h-full flex items-center relative">
           <Search className="w-5 h-5 absolute left-4" />
@@ -53,19 +60,25 @@ export default function Home() {
       {/* main content */}
       <div className="absolute top-0 left-0 w-full h-full flex justify-between items-center ">
         <div>
-          <div className="text-white px-10">
-            <h1 className="text-7xl font-normal">BREAKFAST</h1>
+          <div className="text-white px-14 mb-10">
+            <h1 className="text-7xl font-normal mb-6">BREAKFAST</h1>
             <p className="text-lg w-2/3">
-              Breakfast, often referred to as the ‘most important meal of the
-              day’, provides essential nutrients to kick start our day. It
+              Breakfast, often referred to as the &apos;most important meal of the
+              day&apos;, provides essential nutrients to kick start our day. It
               includes a variety of foods, like fruits, cereals, dairy products,
               and proteins, that contribute to a balanced diet.{" "}
             </p>
           </div>
-          <div className="flex justify-start gap-2 px-10">
+          <div className="flex justify-start gap-2 px-14">
             {imageData.map((item) => (
-              <div key={item.id} onClick={() => setCurrentImage(item.id)} className="">
-                <Image src={item.image} alt="image" width={100} height={100} />
+              <div 
+                key={item.id} 
+                onClick={() => setCurrentImage(item.id)} 
+                className={`cursor-pointer relative ${
+                  currentImage === item.id ? 'pb-2 border-b-2 border-white' : ''
+                }`}
+              >
+                <Image src={item.image} alt="image" width={130} height={130} />
               </div>
             ))}
           </div>
