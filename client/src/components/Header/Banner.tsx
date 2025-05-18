@@ -43,7 +43,7 @@ export default function Banner() {
   ];
   return (
     <div
-      className={`h-[85vh] md:h-screen md:w-screen overflow-hidden relative transition-colors duration-500`}
+      className={`h-[95vh] md:h-screen md:w-screen overflow-hidden relative transition-colors duration-500`}
       style={{ backgroundColor: imageData[currentImage - 1].background }}
     >
       <div
@@ -68,17 +68,17 @@ export default function Banner() {
         </div>
         {/* Text */}
         <div className="px-8 mt-6 mb-6">
-          <h1 className="text-2xl font-semibold mb-2 text-white leading-tight">
+          <h1 className="text-4xl font-semibold mb-2 mt-10 text-white leading-tight">
             BREAKFAST
           </h1>
-          <p className="text-sm text-white mb-2 leading-snug">
+          <p className="text-base text-gray-300 mt-4 mb-10 leading-snug">
             Breakfast, often referred to as the &apos;most important meal of the
             day&apos;, provides essential nutrients to kick start our day. It
             includes a variety of foods, like fruits, cereals, dairy products,
             and proteins, that contribute to a balanced diet.{" "}
-            <a href="#" className="underline">
+            {/* <a href="#" className="underline">
               See more
-            </a>
+            </a> */}
           </p>
         </div>
         {/* Large Image with Arrows */}
@@ -174,9 +174,9 @@ export default function Banner() {
         {/* main content */}
         <div className="absolute top-0 left-0 w-full h-full flex justify-between items-center ">
           <div>
-            <div className="text-white px-14 mb-10">
-              <h1 className="text-7xl font-normal mb-6">BREAKFAST</h1>
-              <p className="text-xl w-2/3">
+            <div className="text-white pl-14 mb-10">
+              <h1 className="text-8xl font-normal mb-6">BREAKFAST</h1>
+              <p className="text-2xl text-gray-300 w-2/3">
                 Breakfast, often referred to as the &apos;most important meal of
                 the day&apos;, provides essential nutrients to kick start our
                 day. It includes a variety of foods, like fruits, cereals, dairy
