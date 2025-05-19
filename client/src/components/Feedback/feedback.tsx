@@ -1,7 +1,8 @@
 "use client";
 
+import { motion, useInView } from "framer-motion";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const testimonials = [
   {
@@ -29,12 +30,22 @@ const testimonials = [
 
 export default function Feedback() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const textRef = useRef(null);
+  const personRef = useRef(null);
+  const isTextInView = useInView(textRef, { once: true });
+  const isPersonInView = useInView(personRef, { once: true });
 
   return (
     <section className="container max-w-7xl mx-auto mt-12 md:mt-28 relative z-10 bg-white px-4 sm:px-6">
       <div className="flex flex-col-reverse md:flex-row md:gap-20 items-center">
         {/* Text/Testimonial Section */}
-        <div className="w-full md:w-1/2 space-y-6 mt-8 md:mt-0">
+        <motion.div 
+          ref={textRef}
+          initial={{ x: -100, opacity: 0 }}
+          animate={isTextInView ? { x: 0, opacity: 1 } : { x: -100, opacity: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="w-full md:w-1/2 space-y-6 mt-8 md:mt-0"
+        >
           <h2 className="text-3xl md:text-4xl font-bold text-center md:text-left">
             Customer <span className="text-[#AD1519]">Feedback</span>
           </h2>
@@ -73,14 +84,21 @@ export default function Feedback() {
               />
             ))}
           </div>
-        </div>
+        </motion.div>
+
         {/* Image Section */}
         <div className="w-full md:w-1/2 flex flex-col items-center mt-6">
           <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto">
             <Image src="/assets/Vector.png" alt="Vector" width={500} height={500} className="w-full h-auto" />
-            <div className="absolute bottom-0 right-0 left-0">
+            <motion.div 
+              ref={personRef}
+              initial={{ x: 100, opacity: 0 }}
+              animate={isPersonInView ? { x: 0, opacity: 1 } : { x: 100, opacity: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="absolute bottom-0 right-0 left-0"
+            >
               <Image src="/assets/feedback_person.png" alt="Vector" width={500} height={500} className="w-full h-auto" />
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>

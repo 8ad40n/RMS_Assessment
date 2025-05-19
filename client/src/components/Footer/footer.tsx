@@ -3,24 +3,67 @@
 import { Clock, Facebook, Instagram, Mail, MapPin, Phone, Send, Twitter, Youtube } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function Footer() {
+  const [email, setEmail] = useState("");
+  const [isSubscribing, setIsSubscribing] = useState(false);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    try {
+      setIsSubscribing(true);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast.success("Thank you for subscribing to our newsletter!");
+      setEmail("");
+    } catch (error) {
+      console.log(error)
+      toast.error("Failed to subscribe. Please try again later.");
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
   return (
-    <footer className="bg-[#880808] text-white pt-10">
+    <footer id="footer" className="bg-[#880808] text-white pt-10">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 justify-between items-center">
           {/* Newsletter Section */}
           <div className="space-y-4">
             <h2 className="text-2xl font-bold">RESTAURANT</h2>
             <p className="text-sm">Subscribe our newsletter and get discount 25%off</p>
-            <div className="relative flex gap-2">
+            <form onSubmit={handleSubscribe} className="relative flex gap-2">
               <input
                 type="email"
                 placeholder="Enter Your Email"
                 className="px-4 py-2 rounded bg-white text-black flex-1"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={isSubscribing}
               />
-              <Send className="absolute right-0 top-0 h-full w-10 px-2 cursor-pointer hover:text-gray-300 bg-[#A52A2A]"/>
-            </div>
+              <button 
+                type="submit"
+                disabled={isSubscribing}
+                className="absolute right-0 top-0 h-full w-10 px-2 cursor-pointer hover:text-gray-300 bg-[#A52A2A] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Send className="w-5 h-5" />
+              </button>
+            </form>
             <div className="flex gap-4 mt-4">
               <Facebook className="w-5 h-5 cursor-pointer hover:text-gray-300" />
               <Twitter className="w-5 h-5 cursor-pointer hover:text-gray-300" />
@@ -56,11 +99,11 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-xl font-semibold">Links</h3>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="hover:text-gray-300">About Us</a></li>
-              <li><a href="#" className="hover:text-gray-300">Contact Us</a></li>
-              <li><a href="#" className="hover:text-gray-300">Our Menu</a></li>
-              <li><a href="#" className="hover:text-gray-300">Team</a></li>
-              <li><a href="#" className="hover:text-gray-300">FAQ</a></li>
+              <li><Link href="#footer" className="hover:text-gray-300">About Us</Link></li>
+              <li><Link href="#footer" className="hover:text-gray-300">Contact Us</Link></li>
+              <li><Link href="#footer" className="hover:text-gray-300">Our Menu</Link></li>
+              <li><Link href="#footer" className="hover:text-gray-300">Team</Link></li>
+              <li><Link href="#footer" className="hover:text-gray-300">FAQ</Link></li>
             </ul>
           </div>
 

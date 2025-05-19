@@ -19,6 +19,10 @@ const foodSchema = new Schema<IFood>(
       type: String,
       required: [true, "Product image URL is required"],
     },
+    price:{
+        type: Number,
+        required: [true, "Price is required"],
+    }
   },
   {
     timestamps: true, 

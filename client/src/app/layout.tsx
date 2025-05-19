@@ -1,6 +1,7 @@
 import Footer from "@/components/Footer/footer";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -27,6 +28,7 @@ export default function RootLayout({
       >
         {children}
         <Footer />
+        <Toaster />
       </body>
     </html>
   );

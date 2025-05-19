@@ -4,4 +4,5 @@ export interface IFood {
   name: string;
   category: Types.ObjectId;
   image: string;
+  price: number;
 }

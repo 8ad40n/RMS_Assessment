@@ -1,19 +1,82 @@
 "use client";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
-import { ArrowLeftIcon, ArrowRightIcon, Search } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon, Loader2, Search } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
+interface SearchResult {
+  _id: string;
+  name: string;
+  price: number;
+  category: {
+    name: string;
+  };
+  image: string;
+}
+
 export default function Banner() {
   const [currentImage, setCurrentImage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [showResults, setShowResults] = useState(false);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const prevImageRef = useRef(currentImage);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     prevImageRef.current = currentImage;
   }, [currentImage]);
 
   const isForward = currentImage > prevImageRef.current;
+
+  const handleSearch = async (query: string) => {
+    setSearchQuery(query);
+    setShowResults(true);
+
+    // Clear previous timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Set new timeout for search
+    searchTimeoutRef.current = setTimeout(async () => {
+      if (query.trim()) {
+        try {
+          setIsSearching(true);
+          const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/food`);
+          const data = await response.json();
+          if (data.success) {
+            const filteredResults = data.data.filter((food: SearchResult) => 
+              food.name.toLowerCase().includes(query.toLowerCase()) ||
+              food.category.name.toLowerCase().includes(query.toLowerCase())
+            );
+            setSearchResults(filteredResults);
+          }
+        } catch (error) {
+          console.error("Failed to fetch foods:", error);
+          setSearchResults([]);
+        } finally {
+          setIsSearching(false);
+        }
+      } else {
+        setSearchResults([]);
+      }
+    }, 300);
+  };
+
+  // Close search results when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const searchContainer = document.getElementById('search-container');
+      if (searchContainer && !searchContainer.contains(event.target as Node)) {
+        setShowResults(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const imageData = [
     {
@@ -41,6 +104,7 @@ export default function Banner() {
       sub_background: "#003333",
     },
   ];
+  
   return (
     <div
       className={`h-[95vh] md:h-screen md:w-screen overflow-hidden relative transition-colors duration-500`}
@@ -58,12 +122,52 @@ export default function Banner() {
       <div className="block md:hidden w-full h-full absolute top-0 left-0 z-20">
         {/* Navbar */}
         <div className="flex items-center p-4 w-full">
-          <div className="bg-white rounded-2xl w-full h-full flex items-center relative">
+          <div id="search-container" className="bg-white rounded-2xl w-full h-full flex items-center relative">
             <Search className="w-5 h-5 absolute left-4" />
             <Input
               placeholder="Search...."
               className="text-black pl-12 h-10 text-lg bg-transparent"
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              onFocus={() => setShowResults(true)}
             />
+            {/* Search Results Dropdown */}
+            {showResults && searchQuery.trim() && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg max-h-[300px] overflow-y-auto z-50">
+                {isSearching ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
+                  </div>
+                ) : searchResults.length > 0 ? (
+                  <div className="py-2">
+                    {searchResults.map((item) => (
+                      <div
+                        key={item._id}
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      >
+                        <div className="w-12 h-12 relative rounded-full overflow-hidden">
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-medium text-gray-900">{item.name}</h4>
+                          <p className="text-sm text-gray-500">{item.category.name}</p>
+                        </div>
+                        <div className="text-gray-900 font-medium">
+                          ${item.price.toFixed(2)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-4 text-center text-gray-500">No results found</div>
+                )}
+              </div>
+            )}
           </div>
         </div>
         {/* Text */}
@@ -163,20 +267,60 @@ export default function Banner() {
           <div className="hidden md:block text-white text-xl md:text-3xl font-bold">
             RESTAURANT
           </div>
-          <div className="bg-white rounded-2xl w-1/3 h-full flex items-center relative">
+          <div id="search-container" className="bg-white rounded-2xl w-1/3 h-full flex items-center relative">
             <Search className="w-5 h-5 absolute left-4" />
             <Input
               placeholder="Search..."
               className="text-black pl-12 h-10 text-lg"
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              onFocus={() => setShowResults(true)}
             />
+            {/* Search Results Dropdown */}
+            {showResults && searchQuery.trim() && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg max-h-[300px] overflow-y-auto z-50">
+                {isSearching ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
+                  </div>
+                ) : searchResults.length > 0 ? (
+                  <div className="py-2">
+                    {searchResults.map((item) => (
+                      <div
+                        key={item._id}
+                        className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      >
+                        <div className="w-12 h-12 relative rounded-full overflow-hidden">
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-medium text-gray-900">{item.name}</h4>
+                          <p className="text-sm text-gray-500">{item.category.name}</p>
+                        </div>
+                        <div className="text-gray-900 font-medium">
+                          ${item.price.toFixed(2)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-4 text-center text-gray-500">No results found</div>
+                )}
+              </div>
+            )}
           </div>
         </div>
         {/* main content */}
         <div className="absolute top-0 left-0 w-full h-full flex justify-between items-center ">
           <div>
-            <div className="text-white pl-14 mb-10">
+            <div className="text-white pl-14 mb-10 mt-8">
               <h1 className="text-8xl font-normal mb-6">BREAKFAST</h1>
-              <p className="text-2xl text-gray-300 w-2/3">
+              <p className="text-xl text-gray-300 w-2/3">
                 Breakfast, often referred to as the &apos;most important meal of
                 the day&apos;, provides essential nutrients to kick start our
                 day. It includes a variety of foods, like fruits, cereals, dairy
